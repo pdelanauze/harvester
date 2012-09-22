@@ -263,9 +263,9 @@ define(['jquery', 'underscore', 'backbone', 'modelbinder', 'lib/utility'], funct
     },
     close:function () {
       this.tableViewInstance.close();
+      this.collection.off(null, null, this);
       this.remove();
       this.unbind();
-      this.collection.off(null, null, this);
     }
   });
 
@@ -475,8 +475,22 @@ define(['jquery', 'underscore', 'backbone', 'modelbinder', 'lib/utility'], funct
       }
     },
     showView: function(newView){
-      if (this.activeView){
-        this.activeView.close();
+      // Close the old collection / open the new collection if they expose close() / open() methods
+      if (this.activeView && this.activeView.collection && newView.collection && this.activeView.collection != newView.collection && this.activeView.collection.close){
+        this.activeView.collection.close();
+      }
+      if (newView.collection && newView.collection.open){
+        newView.collection.open();
+      }
+
+      if (this.activeView) {
+        if (this.activeView.close) {
+          this.activeView.close();
+        } else {
+          console.log('WARN: View has no close function for cleanup', this.activeView);
+          this.activeView.off(null, null, this.activeView);
+          this.activeView.remove();
+        }
       }
       this.activeView = newView;
       this.$el.append(this.activeView.el);
@@ -577,6 +591,10 @@ define(['jquery', 'underscore', 'backbone', 'modelbinder', 'lib/utility'], funct
       this.route(this.pluralModelName + '/*splat', this.pluralModelName + 'ListSplat', this.listItems);
       this.route(this.pluralModelName + '/new', this.modelName + 'New', this.newItem);
       this.route(this.pluralModelName + '/:id/edit', this.modelName + 'Edit', this.editItem);
+
+      if (!this.collection && this.collectionClass){
+        this.collection = new this.collectionClass();
+      }
 
       if (!this.appView) {
         this.appView = new BackboneUtility.Views.AppView({el:this.parentContainer});

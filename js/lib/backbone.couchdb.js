@@ -101,7 +101,7 @@ define(['jquery', 'underscore', 'backbone', './jquery.couch'], function(jQuery, 
         // XXX - This is going to be a memory issue unless someone does the
         // extend trick.
         var _db = this._db || (this.collection && this.collection._db);
-        if (!_db) _db = this._db = Backbone.couch.db(
+        if (!_db) _db = this._db = new Backbone.couch.db(
           Backbone.couch.options.database);
         var type = 'model' in model ? 'collection' : 'model';
         couch[type][method](_db, model, cb);
@@ -149,11 +149,7 @@ define(['jquery', 'underscore', 'backbone', './jquery.couch'], function(jQuery, 
       change_feed: false,
       initialize: function() {
         _.bindAll(this, '_init_changes', '_on_change');
-
-        if (this.change_feed)
-          this._db.info({
-            success: this._init_changes
-          });
+        // this.open();
       },
       _init_changes: function(state) {
         var seq = state.update_seq || 0;
@@ -179,8 +175,32 @@ define(['jquery', 'underscore', 'backbone', './jquery.couch'], function(jQuery, 
           }
 
           if (res.deleted) return
-          _this.add(couch._format_row(res));
+
+          if (res.doc._rev.match(/^1-/)){
+            if (!_this.limit || _this.length < _this.limit){
+              // Only append new records to the collection
+              _this.add(couch._format_row(res), {at: 0});
+            }
+          }
         });
+      },
+      open: function(){
+        if (this.change_feed && !this._changes){
+          this._db.info({
+            success:this._init_changes
+          });
+        }
+      },
+      close: function(){
+        this.off();
+        this.each(function(m){
+          m.off();
+          this.remove(m);
+        }, this);
+        if (this._changes){
+          this._changes.stop();
+          this._changes = null;
+        }
       }
     });
 
