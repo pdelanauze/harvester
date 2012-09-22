@@ -1,23 +1,14 @@
-# Couchstrap
+# Harvester
 
-A fast way to bootstrap a couchapp into a couchdb server.
+CouchApp with a Node.JS process to fetch pages scraped through the jsdom plugin.
+Scraping login coded with jQuery ( how fun :) )
 
-Technologies used include
 
-- soca
-- Twitter's bootstrap
-- Require.js
-- Backbone.js (and therefore underscore and jQuery)
-- Backbone.js modelbinder
-- The pyronicide couchdb adapter
-- jQuery
-- Less
-- Require.js
+# TODO
+Insert instructions here ;)
 
-Tools provided:
-- Backbone utility functions
-- SimpleJsonSchema validator
-- A couchdb compatible BackboneSchemaModel
-- A CouchDB replication app
-- A Todo example app!
+Should be somewhere around the lines of soca push && node node/scraper.js
 
+# Issues
+
+- Recursivity needs to be dealt with. There is a possibility that the fetcher will recurse infinitely in certain scenarios.
