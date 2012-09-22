@@ -6,7 +6,9 @@ require.config({
     'backbone.marionette': 'lib/backbone.marionette',
     'modelbinder': 'lib/Backbone.ModelBinder',
     'less': 'lib/less-1.3.0',
-    'bootstrap': 'lib/bootstrap'
+    'bootstrap': 'lib/bootstrap',
+    'ace': 'lib/ace',
+    'pilot': 'lib/ace/pilot'
   }
 });
 
@@ -27,8 +29,8 @@ require([
 	// Global configuration
 
   // TODO You need to configure these to point to the right database / couch application
-  backboneCouchDb.couch.options.database = 'couchstrap';
-  backboneCouchDb.couch.options.design = 'couchstrap';
+  backboneCouchDb.couch.options.database = 'harvester';
+  backboneCouchDb.couch.options.design = 'harvester';
 
   _.templateSettings = {
     evaluate    : /<%([\s\S]+?)%>/g,

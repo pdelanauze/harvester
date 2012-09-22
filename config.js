@@ -1,5 +1,5 @@
 {
-  "id": "couchstrap",
+  "id": "harvester",
   "mapDirectories": {
   "config.js": "",
   "index.html": "_attachments/index.html",
@@ -14,6 +14,7 @@
   "db": "",
   "Jimfile": false,
   "hooks": false,
-	".rvmrc": false
+	".rvmrc": false,
+  "node": false
 }
 }

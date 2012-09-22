@@ -63,6 +63,7 @@ define(['underscore', 'backbone', '../lib/utility', '../lib/backbone-utility', '
     },
     initialize: function(){
       this._db = Backbone.couch.db(Backbone.couch.options.database);
+      Backbone.couch.Collection.prototype.initialize.apply(this, arguments);
     }
     // _db:Backbone.couch.db(Backbone.couch.options.database) // Set a runtime...
   });
